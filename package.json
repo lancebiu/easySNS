@@ -1,0 +1,22 @@
+{
+  "name": "easy-sns",
+  "version": "1.0.0",
+  "description": "跟着桂林老师的课程用NodeJS写的一个简单的微博， 用于学习NodeJS",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lancebiu/easySNS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lancebiu/easySNS/issues"
+  },
+  "homepage": "https://github.com/lancebiu/easySNS#readme",
+  "devDependencies": {
+    "nodemon": "^1.10.2"
+  }
+}
