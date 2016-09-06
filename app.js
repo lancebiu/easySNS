@@ -1,6 +1,7 @@
 const http = require('http');
 const parseUrl = require('url').parse;
 const controllers = require('./controllers');
+const authorize = require('./middlewares/authorize');
 
 function notFoundController(req, res) {
 	res.end('404');
@@ -13,7 +14,11 @@ const routes = [
 	},
 	{
 		path      : '/user',
-		controller: controllers.user
+		controller: controllers.user.user
+	},
+	{
+		path      : '/my/avatar',
+		controller: controllers.user.myAvatar
 	},
 	{
 		path      : '/auth/register',
@@ -25,7 +30,11 @@ const routes = [
 	},
 	{
 		path      : /^\/static(\/.*)/,
-		controller: controllers.static
+		controller: controllers.static.static
+	},
+	{
+		path      : /^\/upload(\/.*)/,
+		controller: controllers.static.upload
 	}
 ];
 
@@ -48,7 +57,7 @@ var server = http.createServer(function (req, res) {
 		return route.path === urlInfo.pathname;
 	});
 	var controller = route && route.controller || notFoundController;
-	controller(req, res);
+	authorize(controller)(req, res);
 });
 
 server.listen(3000);

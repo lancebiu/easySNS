@@ -20,4 +20,17 @@ BaseModel.prototype.delete = function (id, callback) {
 	this.store.delete(this.prefix + id, callback);
 }
 
+BaseModel.prototype.updatePart = function (id, part, callback) {
+	const self = this;
+	this.get(id, function (err, result) {
+		if(err || !result) {
+			callback(err, result);
+			return;
+		}
+		Object.assign(result, part);
+		self.update(id, result, callback);
+	});
+
+}
+
 module.exports = BaseModel;

@@ -15,6 +15,16 @@ function generateToken(userId, callback) {
 	});
 }
 
+function doLogin(userId, res) {
+	generateToken(userId, function(err, token) {
+		res.writeHead(302, {
+			location: '/',
+			'Set-Cookie': `token=${token}; Path=/; HttpOnly`
+		});
+		res.end();
+	});
+}
+
 exports.register = function (req, res) {
 	parseBody(req, function (err, body) {
 		if (err) {
@@ -31,7 +41,7 @@ exports.register = function (req, res) {
 				sendError(err, res);
 				return;
 			}
-			redirect('/', res);
+			doLogin(user.id, res);
 		});
 	});
 }
@@ -54,7 +64,7 @@ exports.login = function (req, res) {
 			if(body.password !== user.password) {
 				redirect('/?err=invalid_pass', res);
 			}
-			redirect('/', res);
+			doLogin(user.id, res);
 		});
 	});
 }
