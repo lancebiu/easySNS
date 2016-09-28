@@ -1,36 +1,32 @@
-function BaseModel(store, prefix) {
-	this.store = store;
-	this.prefix = prefix;
-}
+class BaseModel {
+	constructor(store, prefix) {
+		this.store = store;
+		this.prefix = prefix;
+	}
 
-BaseModel.prototype.create = function (obj, callback) {
-	obj.id = obj.id || Date.now();
-	this.store.set(this.prefix + obj.id, obj, callback);
-}
+	async create (obj) {
+		obj.id = obj.id || Date.now();
+		await this.store.set(this.prefix + obj.id, obj);
+		return obj.id;
+	}
 
-BaseModel.prototype.get = function(id, callback) {
-	this.store.get(this.prefix + id, callback);
-}
+	async get (id) {
+		return await this.store.get(this.prefix + id);
+	}
 
-BaseModel.prototype.update = function(id, obj, callback) {
-	this.store.set(this.prefix + id, obj, callback);
-}
+	async update (id, obj) {
+		await this.store.set(this.prefix + id, obj);
+	}
 
-BaseModel.prototype.delete = function (id, callback) {
-	this.store.delete(this.prefix + id, callback);
-}
+	async delete (id) {
+		await this.store.delete(this.prefix + id);
+	}
 
-BaseModel.prototype.updatePart = function (id, part, callback) {
-	const self = this;
-	this.get(id, function (err, result) {
-		if(err || !result) {
-			callback(err, result);
-			return;
-		}
+	async updatePart (id, part) {
+		var result = await this.get(id);
 		Object.assign(result, part);
-		self.update(id, result, callback);
-	});
-
+		await this.update(id, result);
+	}
 }
 
 module.exports = BaseModel;

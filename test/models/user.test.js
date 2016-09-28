@@ -5,22 +5,18 @@ const UserModel = require('../../models/user');
 const store = new MemStore();
 const model = new UserModel(store);
 
-describe('UserModel', function() {
+describe('UserModel', () => {
 	const testUser = {
 		email: 'lance@test.com',
 		nickname: 'lance',
 		password: '123456'
-	}
-	it('could get user by email', function(done) {
-		model.create(testUser, function(err) {
-			expect(err).to.be.oneOf([null, undefined]);
-			model.getByEmail('lance@test.com', function(err, result) {
-				expect(err).to.be.oneOf([null, undefined]);
-				expect(result.email).to.be.equal(testUser.email);
-				expect(result.nickname).to.be.equal(testUser.nickname);
-				expect(result.password).to.be.equal(testUser.password);
-				done();
-			});
-		});
-	})
-});
+	};
+
+	it('should get user by email', async () => {
+		await model.create(testUser);
+		const result = await model.getByEmail('lance@test.com');
+		expect(result.email).to.equal(testUser.email);
+		expect(result.nickname).to.equal(testUser.nickname);
+		expect(result.password).to.equal(testUser.password);
+	});
+})

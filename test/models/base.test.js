@@ -8,42 +8,27 @@ const obj = {
 	foo: 'bar'
 };
 
-describe('BaseModel', function () {
-	it('could create', function (done) {
-		model.create(obj, function (err) {
-			expect(err).to.be.oneOf([null, undefined]);
-			expect(obj.id).to.be.not.null;
-			done();
-		});
+describe('BaseModel', () => {
+	it('should create without error', async () => {
+		const id = await model.create(obj);
+		expect(id).to.be.ok;
 	});
 
-	it('could get', function (done) {
-		model.get(obj.id, function (err, result) {
-			expect(err).to.be.oneOf([null, undefined]);
-			expect(result.foo).to.be.equal('bar');
-			done();
-		});
+	it('should get by id', async () => {
+		const result = await model.get(obj.id);
+		expect(result).to.be.ok;
+		expect(result.foo).to.equal('bar');
 	});
 
-	it('could update', function (done) {
-		model.update(obj.id, {foo: 'baz'}, function (err) {
-			expect(err).to.be.oneOf([null, undefined]);
-			model.get(obj.id, function (err, result) {
-				expect(err).to.be.oneOf([null, undefined]);
-				expect(result.foo).to.be.equal('baz');
-				done();
-			});
-		});
+	it('should update without err', async () => {
+		await model.update(obj.id, {foo: 'baz'});
+		const result = await model.get(obj.id);
+		expect(result.foo).to.equal('baz');
 	});
 
-	it('could delete', function (done) {
-		model.delete(obj.id, function (err) {
-			expect(err).to.be.oneOf([null, undefined]);
-			model.get(obj.id, function (err, result) {
-				expect(err).to.be.oneOf([null, undefined]);
-				expect(result).to.be.undefined;
-				done();
-			});
-		});
+	it('should get nothing after delete', async () => {
+		await model.delete(obj.id);
+		const result = await model.get(obj.id);
+		expect(result).not.to.be.ok;
 	});
 });
