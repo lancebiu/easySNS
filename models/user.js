@@ -1,21 +1,13 @@
-const BaseModel = require('./base');
-const PREFIX_EMAIL_TO_ID = 'email-id:';
+const MongoBaseModel = require('./mongobase');
 
-class UserModel extends BaseModel {
-	constructor(store) {
-		super(store, "user:");
+class UserModel extends  MongoBaseModel{
+	init(collection) {
+		this.collection = collection;
+		this.collection.createIndex({email: 1}, {unique: true}).then();
 	}
 
-	// TODO test another code
-	create(obj) {
-		return super.create(obj)
-			.then((id) => this.store.set(PREFIX_EMAIL_TO_ID + obj.email, id))
-			.then(() => obj.id);
-	}
-
-	async getByEmail(email) {
-		const id = await this.store.get(PREFIX_EMAIL_TO_ID + email);
-		return await this.get(id);
+	getByEmail(email) {
+		return this.collection.findOne({email: email})
 	}
 }
 

@@ -4,12 +4,16 @@ const path = require('path');
 const views = require('koa-views');
 const mount = require('koa-mount');
 const json = require('koa-json');
-const bodyparser = require('koa-bodyparser');
+const bodyParser = require('koa-bodyparser');
+const session = require('koa-generic-session');
+const redisSessionStore = require('koa-redis');
 const logger = require('koa-logger');
 const convert = require('koa-convert');
 const serveStatic = require('koa-static');
-const router = require('./routes').router;
 
+const router = require('./routes');
+
+app.keys = ['ew1Qsa'];
 // middlewares
 app.use(logger());
 
@@ -22,8 +26,15 @@ app.use(async(ctx, next) => {
 });
 
 app.use(mount('/static', convert(serveStatic(path.join(__dirname, 'public')))));
-app.use(bodyparser());
+app.use(mount('/upload', convert(serveStatic(path.join(__dirname, 'data/upload')))));
+app.use(bodyParser());
 app.use(json());
+
+app.use(session({
+	store: redisSessionStore({
+		// options
+	})
+}));
 
 app.use(views(path.join(__dirname, 'views'), {
 	extension: 'html'

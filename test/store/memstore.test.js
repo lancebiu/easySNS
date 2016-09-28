@@ -1,4 +1,4 @@
-const expect = require('chai').expect;
+const {expect} = require('chai');
 const MemStore = require('../../store/memstore');
 
 var memStore = new MemStore();
